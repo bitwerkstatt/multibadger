@@ -15,6 +15,26 @@ HEIGHT = badger2040.HEIGHT
 current_badge = 0
 badges = []
 
+state = {}
+
+def init_state():
+    try:
+        with open("state.txt", "r") as f:
+            result = json.load(f)
+    except:
+            result = {
+                "current_badge": 0
+            }
+    return result
+
+def write_state():
+    try:
+        with open("state.txt", "w") as f:
+            json_state = json.dumps(state)
+            f.write(json_state)
+    except:
+        warning("PROBLEM", "Cannot save state")
+
 def initialize_badges():
     try:
         with open("badges.json","r") as f:
@@ -144,27 +164,27 @@ def warning(title, message):
     display.update()
 
 def handle_button(pin):
-    global current_badge
+    global state
     if pin == badger2040.BUTTON_A:
-        render_badge(current_badge)
+        render_badge(state["current_badge"])
     if pin == badger2040.BUTTON_B:
-        render_contact(current_badge)
+        render_contact(state["current_badge"])
     if pin == badger2040.BUTTON_C:
-        render_call_to_action(current_badge)
+        render_call_to_action(state["current_badge"])
     if pin == badger2040.BUTTON_UP:
 
-        current_badge+=1
-        if current_badge >= len(badges):
-            current_badge = 0
-
-        render_badge(current_badge)
+        state["current_badge"]+=1
+        if state["current_badge"] >= len(badges):
+            state["current_badge"] = 0
+        write_state()
+        render_badge(state["current_badge"])
     if pin == badger2040.BUTTON_DOWN:
 
-        current_badge-=1
-        if current_badge<0:
-            current_badge=len(badges)-1
-
-        render_badge(current_badge)
+        state["current_badge"]-=1
+        if state["current_badge"]<0:
+            state["current_badge"]=len(badges)-1
+        write_state()
+        render_badge(state["current_badge"])
     time.sleep(0.5)
 
 
@@ -172,7 +192,8 @@ badges = initialize_badges()
 
 while True:
     display.keepalive()
-
+    state = init_state()
+    print(state)
     if display.pressed(badger2040.BUTTON_A):
         handle_button(badger2040.BUTTON_A)
     if display.pressed(badger2040.BUTTON_B):
