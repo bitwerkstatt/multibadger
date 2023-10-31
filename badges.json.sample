@@ -1,0 +1,15 @@
+[
+    {
+        "organization": "ACME Inc",
+        "name": "Your name",
+        "function1": "Director Engineering",
+        "function2": "Warehouse&Logistics",
+        "mail": "rr@acme.com",
+        "logo": "some.jpg",
+        "phone": "",
+        "profile_text":"",
+        "profile_qr": "",
+        "call_to_action_text": "",
+        "call_to_action_qr": ""
+    },
+]
